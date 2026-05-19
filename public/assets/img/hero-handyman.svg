@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420" role="img" aria-label="Handyman SG illustration">
+<rect width="640" height="420" fill="#f9fafb"/>
+<rect x="40" y="70" width="560" height="300" rx="18" fill="#fff" stroke="#e5e7eb"/>
+<circle cx="150" cy="160" r="48" fill="#1F2937"/><rect x="120" y="215" width="60" height="95" rx="12" fill="#1F2937"/>
+<rect x="210" y="130" width="170" height="20" rx="10" fill="#F97316"/>
+<rect x="210" y="165" width="250" height="14" rx="7" fill="#d1d5db"/>
+<rect x="210" y="190" width="220" height="14" rx="7" fill="#e5e7eb"/>
+<rect x="210" y="230" width="120" height="80" rx="10" fill="#fff7ed" stroke="#fed7aa"/>
+<path d="M265 248l18 18-18 18-18-18z" fill="#F97316"/>
+<rect x="350" y="230" width="210" height="80" rx="10" fill="#f3f4f6"/>
+<text x="370" y="270" fill="#374151" font-family="Arial" font-size="18">Same-Day Service</text>
+</svg>

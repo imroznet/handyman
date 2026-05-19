@@ -1,0 +1,40 @@
+{
+  "services": [
+    {
+      "id": "electrical",
+      "name": "Electrical Services Singapore"
+    }
+  ],
+  "blogs": [
+    {
+      "id": "prevent-water-leak-singapore",
+      "title": "How to Prevent Water Leaks in Singapore Homes"
+    }
+  ],
+  "reviews": [
+    {
+      "name": "Sarah",
+      "text": "Fast and professional."
+    }
+  ],
+  "faqs": [
+    {
+      "q": "Do you serve all areas?",
+      "a": "Yes, island-wide."
+    }
+  ],
+  "pricing": [
+    {
+      "service": "Basic Visit",
+      "price": "60"
+    }
+  ],
+  "locations": [
+    {
+      "slug": "jurong",
+      "name": "Jurong"
+    }
+  ],
+  "gallery": [],
+  "bookings": []
+}
