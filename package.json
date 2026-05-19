@@ -1,0 +1,7 @@
+{
+  "name": "handymansg-static",
+  "private": true,
+  "scripts": {
+    "check": "node --check public/assets/js/app.js"
+  }
+}
