@@ -1,65 +1,20 @@
-const express = require('express');
-const session = require('express-session');
-const path = require('path');
-const bcrypt = require('bcryptjs');
-const db = require('./config/db');
-const { get, run } = require('./models/helpers');
-const adminRoutes = require('./routes/admin');
-const apiRoutes = require('./routes/api');
 
-const app = express();
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json({ limit: '1mb' }));
-
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'replace-with-long-random-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', maxAge: 1000 * 60 * 60 * 12 }
-}));
-
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/assets', express.static(path.join(__dirname, '../public/assets')));
-app.use(express.static(path.join(__dirname, '../public')));
-
-app.use('/api', apiRoutes);
-app.use('/admin', adminRoutes);
-
-app.get('/health', (_req, res) => res.json({ ok: true }));
-
-app.use((req, res) => {
-  if (req.path.startsWith('/api')) return res.status(404).json({ error: 'Not found' });
-  return res.status(404).send('Page not found');
-});
-
-app.use((err, _req, res, _next) => {
-  console.error('[server error]', err);
-  if (res.headersSent) return;
-  if (String(_req.path || '').startsWith('/api')) return res.status(500).json({ error: 'Internal server error' });
-  return res.status(500).send('Internal server error');
-});
-
-async function seedDefaultAdmin() {
-  const email = process.env.ADMIN_EMAIL || 'admin@handymansg.com';
-  const password = process.env.ADMIN_PASSWORD || 'Admin123!';
-  const existing = await get('SELECT id FROM admins LIMIT 1');
-  if (!existing) {
-    const hash = await bcrypt.hash(password, 10);
-    await run('INSERT INTO admins (username,password_hash) VALUES (?,?)', [email, hash]);
-    console.log(`[seed] default admin created: ${email}`);
-  }
-}
-
-async function start() {
-  await seedDefaultAdmin();
-  const port = Number(process.env.PORT || 8787);
-  app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
-}
-
-start().catch((e) => {
-  console.error('Failed to start server', e);
-  db.close();
-  process.exit(1);
-});
+const express=require('express');
+const fs=require('fs');
+const path=require('path');
+const multer=require('multer');
+const cookieParser=require('cookie-parser');
+const app=express();
+const upload=multer({dest:path.join(__dirname,'uploads')});
+const DATA=path.join(__dirname,'data/content.json');
+const ADMIN_USER=process.env.ADMIN_USER||'admin';
+const ADMIN_PASS=process.env.ADMIN_PASS||'change-this-password';
+app.use(express.json());app.use(cookieParser());app.use(express.static(path.join(__dirname,'../public')));
+const read=()=>JSON.parse(fs.readFileSync(DATA,'utf8')); const write=(d)=>fs.writeFileSync(DATA,JSON.stringify(d,null,2));
+const auth=(req,res,next)=>req.cookies.auth==='ok'?next():res.status(401).json({error:'Unauthorized'});
+app.post('/api/login',(req,res)=>{if(req.body.user===ADMIN_USER&&req.body.pass===ADMIN_PASS){res.cookie('auth','ok',{httpOnly:true,sameSite:'lax'});return res.json({ok:true});}res.status(401).json({error:'Invalid'});});
+app.get('/api/content',auth,(req,res)=>res.json(read()));
+app.post('/api/content/:type',auth,(req,res)=>{const d=read(); const t=req.params.type; if(!Array.isArray(d[t])) return res.status(404).end(); d[t].push(req.body); write(d); res.json({ok:true});});
+app.delete('/api/content/:type/:idx',auth,(req,res)=>{const d=read(); const t=req.params.type; d[t].splice(Number(req.params.idx),1); write(d); res.json({ok:true});});
+app.post('/api/bookings',upload.single('image'),(req,res)=>{const d=read();d.bookings.push({...req.body,image:req.file?.filename||null,createdAt:new Date().toISOString()});write(d);res.json({ok:true,whatsapp:`https://wa.me/6583122991?text=Booking%20received%20for%20${encodeURIComponent(req.body.service||'service')}`});});
+app.listen(process.env.PORT||8787,()=>console.log('Server running'));

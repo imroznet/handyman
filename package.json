@@ -2,16 +2,11 @@
   "name": "handymansg-site",
   "private": true,
   "scripts": {
-    "dev": "NODE_ENV=development node backend/server.js",
-    "start": "NODE_ENV=production node backend/server.js",
-    "seed": "node scripts/seed-admin.js"
+    "start": "node backend/server.js"
   },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "ejs": "^3.1.10",
+    "cookie-parser": "^1.4.7",
     "express": "^4.21.2",
-    "express-session": "^1.18.1",
-    "multer": "^1.4.5-lts.2",
-    "sqlite3": "^5.1.7"
+    "multer": "^1.4.5-lts.2"
   }
 }
