@@ -1,0 +1,5 @@
+[
+  {"service_name":"Basic Visit","price_label":"From S$60"},
+  {"service_name":"Electrical / Plumbing","price_label":"From S$90"},
+  {"service_name":"Half-Day Package","price_label":"From S$220"}
+]

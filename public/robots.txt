@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://handymansg.com/sitemap.xml
